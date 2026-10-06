@@ -1,59 +1,161 @@
-# ProductsFront
+# ProjetoAPI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.8.
+Este repositório reúne, em um único projeto, o **back-end em .NET/C#** e o **front-end em Angular** de uma aplicação de produtos.
 
-## Development server
+O objetivo do trabalho é demonstrar a integração entre a interface Angular, a API .NET e o banco SQLite. Pela tela é possível:
 
-To start a local development server, run:
+- listar produtos;
+- buscar por Id;
+- adicionar;
+- editar;
+- remover.
 
-```bash
+A estrutura principal é:
+
+```text
+ProjetoAPI/
+├── MinhaPrimeiraApi/   # API .NET/C#
+├── products-front/     # Front-end Angular
+├── .gitignore
+└── .gitattributes
+```
+
+## Instalações necessárias
+
+É necessário ter .NET SDK, Node.js e npm instalados.
+
+Caso o Angular CLI ainda não esteja instalado:
+
+```powershell
+npm install -g @angular/cli
+```
+
+Caso a ferramenta do Entity Framework ainda não esteja instalada:
+
+```powershell
+dotnet tool install --global dotnet-ef
+```
+
+O DBeaver é opcional e pode ser usado para visualizar diretamente o banco SQLite.
+
+## Como executar
+
+Abra a pasta `ProjetoAPI` no VS Code.
+
+No painel inferior, abra um terminal em:
+
+```text
+Terminal > New Terminal
+```
+
+Depois clique no botão **Split Terminal** no canto superior direito do painel do terminal. Isso cria dois terminais lado a lado.
+
+Use um para o back-end e outro para o front-end.
+
+### Terminal 1 — API .NET
+
+Na raiz `ProjetoAPI`:
+
+```powershell
+cd MinhaPrimeiraApi
+dotnet restore
+dotnet ef database update
+dotnet run
+```
+
+A API roda em:
+
+```text
+http://localhost:5050
+```
+
+O Swagger fica disponível em:
+
+```text
+http://localhost:5050/swagger
+```
+
+O Swagger permite testar diretamente as operações da API.
+
+### Terminal 2 — Angular
+
+Na raiz `ProjetoAPI`:
+
+```powershell
+cd products-front
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Se o PowerShell bloquear o comando `ng`, use:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```powershell
+npx ng serve
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+A interface fica disponível em:
 
-```bash
-ng generate --help
+```text
+http://localhost:4200
 ```
 
-## Building
+Os dois terminais devem continuar rodando ao mesmo tempo para que o Angular consiga acessar a API.
 
-To build the project run:
+## Qual endereço usar
 
-```bash
-ng build
+| Endereço | Função |
+|---|---|
+| `http://localhost:4200` | Interface Angular |
+| `http://localhost:5050` | API .NET |
+| `http://localhost:5050/swagger` | Testes da API |
+
+O Angular roda na porta `4200` e envia as requisições para a API na porta `5050`.
+
+Exemplo:
+
+```text
+Angular em localhost:4200
+        ↓
+API em localhost:5050
+        ↓
+Banco SQLite
+        ↓
+Resposta volta para o Angular
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Banco de dados
 
-## Running unit tests
+A API usa SQLite.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+O arquivo local é:
 
-```bash
-ng test
+```text
+MinhaPrimeiraApi/minhaapi.db
 ```
 
-## Running end-to-end tests
+Esse arquivo não é enviado ao GitHub.
 
-For end-to-end (e2e) testing, run:
+Ao clonar o projeto em outro computador, a estrutura do banco pode ser criada novamente com:
 
-```bash
-ng e2e
+```powershell
+cd MinhaPrimeiraApi
+dotnet ef database update
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+As migrations necessárias já estão no repositório.
 
-## Additional Resources
+Para consultar os dados diretamente no DBeaver:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```sql
+SELECT * FROM Products;
+```
+
+## Encerrar a aplicação
+
+Para parar o back-end ou o front-end, use:
+
+```text
+Ctrl + C
+```
+
+no terminal correspondente.
